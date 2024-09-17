@@ -4,9 +4,11 @@ import {OrbitControls} from './node_modules/three/examples/jsm/controls/OrbitCon
 
 import * as dat from 'dat.gui';
 
-import stars from '/imgs/8k_stars.jpg';
+import stars from '/imgs/stars.jpg';
 // import milkyway from './imgs/Sun_in_Milky_Way-1.webp';
-import sun from '/imgs/8k_sun.jpg';
+// import sun from '/imgs/8k_sun.jpg';
+// import sun from 'https://cdn.spacetelescope.org/archives/images/screen/heic1310a.jpg';
+// import sun from '/imgs/space.jpg';
 
 // Setup //
 
@@ -50,8 +52,8 @@ const textureLoader=new THREE.TextureLoader();
 const cubeTextureLoader=new THREE.CubeTextureLoader();
 
 scene.background=cubeTextureLoader.load([
-    sun,
-    sun,
+    stars,
+    stars,
     stars,
     stars,
     stars,
@@ -79,23 +81,23 @@ const box2Geometry=new THREE.BoxGeometry(4,4,4);
 
 // Multiple Material
 
-// const box2MultiMaterial=[
-//     new THREE.MeshBasicMaterial({map:textureLoader.load(sun)}),
-//     new THREE.MeshBasicMaterial({map:textureLoader.load(stars)}),
-//     new THREE.MeshBasicMaterial({map:textureLoader.load(sun)}),
-//     new THREE.MeshBasicMaterial({map:textureLoader.load(stars)}),
-//     new THREE.MeshBasicMaterial({map:textureLoader.load(sun)}),
-//     new THREE.MeshBasicMaterial({map:textureLoader.load(stars)})
-// ]
+const box2MultiMaterial=[
+    new THREE.MeshBasicMaterial({map:textureLoader.load(stars)}),
+    new THREE.MeshBasicMaterial({map:textureLoader.load(stars)}),
+    new THREE.MeshBasicMaterial({map:textureLoader.load(stars)}),
+    new THREE.MeshBasicMaterial({map:textureLoader.load(stars)}),
+    new THREE.MeshBasicMaterial({map:textureLoader.load(stars)}),
+    new THREE.MeshBasicMaterial({map:textureLoader.load(stars)})
+]
 
-const box2MultiMaterial=new THREE.MeshBasicMaterial({map:cubeTextureLoader.load([
-    sun,
-    sun,
-    stars,
-    stars,
-    stars,
-    stars
-])})
+// const box2MultiMaterial=new THREE.MeshBasicMaterial({map:cubeTextureLoader.load([
+//     sun,
+//     sun,
+//     stars,
+//     stars,
+//     stars,
+//     stars
+// ])})
 
 const box2=new THREE.Mesh(box2Geometry,box2MultiMaterial);
 box2.position.set(0,15,10);
