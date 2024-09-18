@@ -4,11 +4,38 @@ import {OrbitControls} from './node_modules/three/examples/jsm/controls/OrbitCon
 
 import * as dat from 'dat.gui';
 
+import {GLTFLoader} from './node_modules/three/examples/jsm/loaders/GLTFLoader.js'
+
 import stars from '/imgs/stars.jpg';
 // import milkyway from './imgs/Sun_in_Milky_Way-1.webp';
 // import sun from '/imgs/8k_sun.jpg';
 // import sun from 'https://cdn.spacetelescope.org/archives/images/screen/heic1310a.jpg';
 // import sun from '/imgs/space.jpg';
+
+// Model Loader //
+
+const monkeyUrl=new URL('./public/monkey.glb',import.meta.url);
+
+const assetLoader= new GLTFLoader();
+
+assetLoader.load(monkeyUrl.href,function(gltf){
+    const model=gltf.scene;
+    scene.add(model);
+    model.position.set(0,20,0);
+    model.children[0].castShadow=true;
+    model.children[0].scale.set(5,5,5);
+    // model.children[0].material.color.set(0,4,0);
+    model.castShadow=true;
+    console.log(model);
+    gui.addColor(options,'modelColor').onChange(function(e){
+    model.children[0].material.color.set(e);
+});
+
+},undefined,function(error){
+    console.error(error)
+});
+
+
 
 // Setup //
 
@@ -139,34 +166,34 @@ sphere.position.set(-10,10,0)
 
 // Directional Light
 
-const directionalLight=new THREE.DirectionalLight(0xffffff,0.8);
-scene.add(directionalLight)
-directionalLight.position.set(-20,30,0)
-directionalLight.castShadow=true;
+// const directionalLight=new THREE.DirectionalLight(0xffffff,0.8);
+// scene.add(directionalLight)
+// directionalLight.position.set(-20,30,0)
+// directionalLight.castShadow=true;
 
-// DLightHelper
-const dLightHelper=new THREE.DirectionalLightHelper(directionalLight,5);
-scene.add(dLightHelper);
+// // DLightHelper
+// const dLightHelper=new THREE.DirectionalLightHelper(directionalLight,5);
+// scene.add(dLightHelper);
 
-// Dlight Shadow Helper //
+// // Dlight Shadow Helper //
 
-const dlightshadowhelper=new THREE.CameraHelper(directionalLight.shadow.camera);
-scene.add(dlightshadowhelper)
+// const dlightshadowhelper=new THREE.CameraHelper(directionalLight.shadow.camera);
+// scene.add(dlightshadowhelper)
 
-directionalLight.shadow.camera.bottom= -12; //changing the directional light camera field of view
+// directionalLight.shadow.camera.bottom= -12; //changing the directional light camera field of view
 
 // SpotLight //
 
-// const spotLight=new THREE.SpotLight(0xFFFFFF,10000);
-// scene.add(spotLight);
-// spotLight.position.set(-100,100,0);
-// spotLight.castShadow=true;
-// // spotLight.angle=0.2
+const spotLight=new THREE.SpotLight(0xFFFFFF,10000);
+scene.add(spotLight);
+spotLight.position.set(-100,100,0);
+spotLight.castShadow=true;
+// spotLight.angle=0.2
 
-// // SpotLight Helper//
+// SpotLight Helper//
 
-// const sLightHelper=new THREE.SpotLightHelper(spotLight);
-// scene.add(sLightHelper);
+const sLightHelper=new THREE.SpotLightHelper(spotLight);
+scene.add(sLightHelper);
 
 // FOG //
 
@@ -185,12 +212,14 @@ const options={
     speed:0.01,
     angle:0.2,
     penumbra:0,
-    intensity:10000
+    intensity:10000,
+    modelColor:'#ffff00'
 };
 
 gui.addColor(options,'sphereColor').onChange(function(e){
     sphere.material.color.set(e);
 });
+
 
 gui.add(options,'wireframe').onChange(function(e){
     sphere.material.wireframe=e;
@@ -213,10 +242,10 @@ function animate(){
     box.rotation.x+=0.01;
     box.rotation.y+=0.01;
 
-    // spotLight.angle=options.angle;
-    // spotLight.penumbra=options.penumbra;
-    // spotLight.intensity=options.intensity;
-    // sLightHelper.update();
+    spotLight.angle=options.angle;
+    spotLight.penumbra=options.penumbra;
+    spotLight.intensity=options.intensity;
+    sLightHelper.update();
 
     // Sphere Bounce //
     step += options.speed;
@@ -225,4 +254,10 @@ function animate(){
 }
 
 renderer.setAnimationLoop(animate);
+
+window.addEventListener('resize',function(){
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+})
 
